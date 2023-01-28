@@ -11,10 +11,9 @@ const App = () => {
     );
 
     useEffect(() => {
-        noteService.getAll()
-            .then((response) => {
-                setNotes(response.data)
-            });
+        noteService
+            .getAll()
+            .then(responseData => setNotes(responseData));
     }, []);
 
     const updateFormData = (key, value) => {
@@ -38,8 +37,9 @@ const App = () => {
 
     const handleFormSubmit = event => {
         event.preventDefault();
-        noteService.create(formData)
-            .then(response => setNotes(notes.concat(response.data)));
+        noteService
+            .create(formData)
+            .then(responseData => setNotes(notes.concat(responseData)));
         setFormData({content: '', important: false});
     };
 
@@ -48,9 +48,10 @@ const App = () => {
             ...note,
             important: !note.important
         };
-        noteService.update(note.id, updatedNote)
-            .then(response => setNotes(notes.map(n => 
-                (n.id === note.id) ? response.data : n)
+        noteService
+            .update(note.id, updatedNote)
+            .then(responseData => setNotes(notes.map(n => 
+                (n.id === note.id) ? responseData : n)
         ));
     };
 
