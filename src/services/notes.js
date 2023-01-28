@@ -8,8 +8,10 @@ const create = newObj => axios.post(baseUrl, newObj);
 
 const update = (id, newObj) => axios.put(`${baseUrl}/${id}`, newObj);
 
-export default {
+const noteService = {
     getAll,
     create,
     update
 };
+
+export default noteService;

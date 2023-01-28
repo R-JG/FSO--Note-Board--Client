@@ -29,6 +29,11 @@
       "content": "lololo",
       "important": false,
       "id": 6
+    },
+    {
+      "content": "TESTTEST",
+      "important": true,
+      "id": 7
     }
   ]
 }

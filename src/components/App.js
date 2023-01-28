@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import axios from 'axios';
+import noteService from '../services/notes';
 import Note from './Note';
 
 const App = () => {
@@ -11,11 +11,8 @@ const App = () => {
     );
 
     useEffect(() => {
-        console.log('Calling API...');
-        axios
-            .get('http://localhost:3001/notes')
+        noteService.getAll()
             .then((response) => {
-                console.log('API response: ', response);
                 setNotes(response.data)
             });
     }, []);
@@ -41,19 +38,17 @@ const App = () => {
 
     const handleFormSubmit = event => {
         event.preventDefault();
-        axios
-            .post('http://localhost:3001/notes', formData)
+        noteService.create(formData)
             .then(response => setNotes(notes.concat(response.data)));
         setFormData({content: '', important: false});
     };
 
     const toggleNoteImportance = (note) => {
-        const url = `http://localhost:3001/notes/${note.id}`;
         const updatedNote = {
             ...note,
             important: !note.important
         };
-        axios.put(url, updatedNote)
+        noteService.update(note.id, updatedNote)
             .then(response => setNotes(notes.map(n => 
                 (n.id === note.id) ? response.data : n)
         ));
