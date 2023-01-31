@@ -3,10 +3,18 @@ import React from 'react';
 const Note = ({
     note,
     toggleNoteImportance, 
+    deleteNote,
 }) => {
     return (
         <li className='Note'>
-            {note.content}
+            <div>
+                <button 
+                    className='button--delete'
+                    onClick={() => deleteNote(note.id)} >
+                    ×
+                </button>
+                <span>{note.content}</span>
+            </div>
             <div className='note--importance-section'>
                 <span>Important: </span>
                 <button 

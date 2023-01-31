@@ -46,6 +46,10 @@
 
 .Note {
   margin-bottom: 0.3em;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: flex-start;
 }
 
 .note--importance-section {
@@ -57,4 +61,10 @@
 
 .button--toggle-importance {
   font-size: 0.8em;
+}
+
+.button--delete {
+  margin-right: 0.5em;
+  margin-bottom: 0.3em;
+  border-radius: 1em;
 }

@@ -55,6 +55,14 @@ const App = () => {
         ));
     };
 
+    const deleteNote = id => {
+        noteService
+            .deleteNote(id)
+            .then(idOfDeletedNote => setNotes(notes.filter(note => 
+                note.id !== idOfDeletedNote
+        )));
+    };
+
     const noteElements = notes
         .filter(note => 
             (showAll) ? true : note.important)
@@ -63,8 +71,11 @@ const App = () => {
                 key={note.id} 
                 note={note} 
                 toggleNoteImportance={toggleNoteImportance}
+                deleteNote={deleteNote}
             />
     ));
+
+    console.log(notes);
 
     return (
         <div className='App'>
