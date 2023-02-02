@@ -75,8 +75,6 @@ const App = () => {
             />
     ));
 
-    console.log(notes);
-
     return (
         <div className='App'>
             <button 
