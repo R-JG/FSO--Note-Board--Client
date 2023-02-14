@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import noteService from '../services/notes';
 import Note from './Note';
+import Login from './Login';
 
 const App = () => {
 
@@ -9,13 +10,23 @@ const App = () => {
     const [formData, setFormData] = useState(
         {content: '', important: false}
     );
-
+    const [user, setUser] = useState(null);
+    
     useEffect(() => {
         noteService
             .getAll()
             .then(responseData => setNotes(responseData));
     }, []);
-
+    
+    useEffect(() => {
+        const loggedUserStorage = window.localStorage.getItem('loggedUser');
+        if (loggedUserStorage) {
+            const loggedUser = JSON.parse(loggedUserStorage);
+            setUser(loggedUser);
+            noteService.setToken(loggedUser.token);
+        };
+    }, []);
+    
     const updateFormData = (key, value) => {
         setFormData({
             ...formData,
@@ -35,11 +46,16 @@ const App = () => {
         updateFormData('important', !formData.important);
     };
 
+    const createNote = noteData => {
+        noteService.setToken(user.token);
+        noteService
+            .create(noteData)
+            .then(responseData => setNotes(notes.concat(responseData)));
+    };
+
     const handleFormSubmit = event => {
         event.preventDefault();
-        noteService
-            .create(formData)
-            .then(responseData => setNotes(notes.concat(responseData)));
+        createNote(formData);
         setFormData({content: '', important: false});
     };
 
@@ -63,6 +79,22 @@ const App = () => {
         )));
     };
 
+    const logInUser = (username, password) => {
+        noteService
+            .login(username, password)
+            .then(userData => {
+                setUser(userData);
+                const loggedUser = JSON.stringify(userData);
+                window.localStorage.setItem('loggedUser', loggedUser);
+            })
+            .catch(error => console.log(error.message));
+    };
+
+    const logOutUser = () => {
+        setUser(null);
+        window.localStorage.removeItem('loggedUser');
+    };
+
     const noteElements = notes
         .filter(note => 
             (showAll) ? true : note.important)
@@ -77,6 +109,17 @@ const App = () => {
 
     return (
         <div className='App'>
+            {(user) 
+                ? <div className='user-info'>
+                    <span>User: </span>
+                    <span>{user.username}</span>
+                    <button 
+                        className='button--log-out'
+                        onClick={logOutUser}>
+                        Log Out
+                    </button>  
+                </div> 
+                : <Login logInUser={logInUser} />}
             <button 
                 className='button--show-all' 
                 onClick={handleClick}>
